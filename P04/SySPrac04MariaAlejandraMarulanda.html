@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<title>P04</title>
+<meta charset="utf-8" />
+<meta name="description" content="Debe contener las palabras clave, tratar de atraer clicks y de longitud entre 150 y 160 caracteres">
+<link rel="stylesheet" href="estilos.css" />
+<link rel="shortcut icon" href="/favicon.ico" />
+</head>
+ 
+<body>
+    <header>
+       <h1>Práctica 4: Convolución y Correlación <br>de señales en tiempo continuo</h1>
+       
+    </header>
+    <section>
+       <article>
+           <h2>Integrantes</h2>
+           <p> -JOSÉ ÁNGEL SÁNCHEZ CORTÉS
+<br>-JOSE ANTONIO VASQUEZ PINEDA
+<br>-JOSUÉ DANIEL TORRES LIRA
+<br>-MARIA ALEJANDRA MARULANDA VILLASMIL
+<br>-OSCAR CASTAÑEDA IBAÑEZ</p>
+       </article>
+    </section>
+    <aside>
+       <h2>Objetivos</h2>
+        <p>
+		<ol><li>Conocer métodos básicos de integración numérica</li>
+		<li>Manipulación de instrucciones en MATLAB</li>
+		<li>Simular convoluciones y correlaciones de señales</li></ol>
+	</p>
+    </aside>
+</section>
+    <aside>
+       <h2>Introducción</h2>
+	<h3>Métodos numéricos</h3>
+        <p>
+		 Existen diferentes formas de implementar simulaciones numéricas de
+		<br> convoluciones. De acuerdo a la definición matemática de convolución
+		<br> necesitamos resolver una integral de una multiplicación de señales,
+		<br> entonces implementar una simulación de convolución se subdivide en entender
+		<br> que significa integrar numéricamente y posteriormente elegir un algoritmo
+		<br> que resuelva el problema de integración.
+<br> Para la implementación númerica es importante tener en cuenta 
+<br> la duración de cada señal,
+<br> recuerde que es imposible hacer simulaciones númericas que involucren
+<br> cantidades infinitas. Si una señal tiene duración T<sub>1</sub> y otra señal 
+<br> T<sub>2</sub> la convolución tendrá duración T<sub>1</sub>+T<sub>2</sub>; donde la duración se
+<br> refiere al intervalo para el cual la señal no es totalmente cero. 
+	</p>
+<img src="duracionconv.png">
+<p><br>Cabe señalar que si las señales involucradas tienen duración infinita
+<br>podría elegirse T<sub>1</sub> y T<sub>2</sub> lo suficientemente grande para tener una
+<br>idea de lo que sucede con el resultado de su convolución
+
+<br> <h3>Teorema fundamental del calculo:</h3>
+<br> El teorema fundamental del cálculo dice que la *derivada de la integral* F´(x) 
+<br> de la función continua f(x)   es la propia f(x) .
+<br>
+<br> F´(x)=f(x) 
+<br> 
+<br> El teorema fundamental del cálculo nos indica que la derivación y la integración 
+<br> son operaciones inversas.
+<br>
+<br>Al integrar una función continua y luego derivarla se recupera la función 
+<br> original. 
+<br><h3>Newton-Cortes, regal del trapecio:</h3>
+
+<br> De cara a calcular la integral definida: 
+<br> 
+<br> $$\int_a^b f\left(x\right)\mathrm{dx}$$
+<br> 
+<br> Se llaman M´etodos de Newton-Cˆotes a los que se basan en integrar, en lugar 
+<br> de la funci´on dada f(x), un polinomio de interpolaci´on que aproxime a f(x) 
+<br> en [a, b]. Se trata por tanto de toda una familia general de m´etodos, seg´un 
+<br> el polinomio de interpolaci´on que se considere (puede elegirse diferente grado, 
+<br> diferentes puntos para interpolar, etc.). Para el caso de las interpolaciones 
+<br> lineal y cuadr´atica, estos m´etodos se denominan M´etodo de los Trapecios y 
+<br> M´etodo de Simpson, respectivamente.
+<br><h3>Metodo de Simpson:</h3>
+<br> El M´etodo de Simpson es un m´etodo de Newton-Cˆotes de segundo orden, es 
+<br> decir basado en integrar un polinomio de interpolaci´on de segundo grado, de 
+<br> la forma siguiente: Dada la funci´on f(x) en [a, b], tomaremos como tercer punto 
+<br> para la interpolaci´on el punto medio de dicho intervalo, es decir: xm = a+b/ 
+<br> 2 , y denominaremos h = b−a / 2 a la semianchura del intervalo. De esta forma 
+<br> el polinomio de interpolaci´on de grado 2 que pasa por (a, f(a)), (xm, f(xm)) 
+<br> y (b, f(b)) ser´a: 
+<br> 
+<br> P2(x) = f(a) + $\frac{f\left(\mathrm{xm}\right)-f\left(a\right)}{h}$  (x − 
+<br> a) + f(a) +$\frac{f\left(b\right)-2f\left(\mathrm{xm}\right)}{2h^2 }$ (x − a)(x 
+<br> − xm)
+<br><h3>Cuadratura Gaussiana:</h3>
+<br> |Las fórmulas de Trapecios y Simpson utilizan nodos equidistantes y dan valores 
+<br> exactos para polinomios de grado menor o igual que n (n = 1 en el caso de Trapecios 
+<br> y n = 2 en el caso de Simpson).La elección de puntos equidistantes no es la 
+<br> mejor. Puede seleccionarse los puntos de manera que mejore la aproximación.|
+<br> 
+<br> |La *cuadratura* *gaussiana* selecciona los puntos de manera óptima.|
+<br> 
+<br> |El método consiste en seleccionar los nodos x1, x2,. . ., xn en [a, b] y 
+<br> los coeficientes c1, c2,. . ., cn que minimicen el error de la aproximación| 
+<br> 
+<br> |*Reglas de Cuadrátura Gaussiana:* Consideramos por el momento integrales 
+<br> de la forma|  
+<br> 
+<br> |Note que si el integral esta dado en un intervalo arbitrario [a,b] entonces 
+<br> mediante el cambio de variables|  
+<br> 
+<br> |tenemos que|  
+<br> 
+<br> |lo cual nos da una integral en [-1,1]. Asi que sin perdida de generalidad 
+<br> podemos asumir que el integral es en [-1,1].|
+<br> 
+<br> |Sean x1,x2,…,xn puntos (no necesariamente uniformemente distribuidos) en 
+<br> [-1,1] y w1,w2,…,wn números llamados _pesos_ ("weights"). Los puntos xj's y 
+<br> los pesos wj's se determinan de modo que la fórmula de integración numérica|  
+<br> 
+<br> |sea exacta para polinomios de grado a lo más 2n-1, i.e., In(p)=I(p) para 
+<br> todo polinomio p de grado a lo más 2n-1. Como In é I son _operadores lineales_, 
+<br> basta verificar que|  
+<br> 
+<br> |Caso n=1: Aqui I1(f)=w1f(x1) y requerimos que I1(1)=I(1), I1(x)=I(x). Pero 
+<br> I(1)=2 y I1(1)=w1 de modo que w1=2. Además I(x)=0 y I1(x)=2x1, de donde obtenemos 
+<br> que x1=0. Tenemos pues la fómula numérica I1(f)=2f(0) lo cúal se conoce como 
+<br> la _fórmula del punto medio_.|
+<br> 
+<br> |Caso n=2: Tenemos ahora que I2(f)= w1f(x1)+ w2f(x2) y se requiere que I2(xi)=I(xi) 
+<br> para i=0,1,2,3. Esto nos lleva al siguiente sistema nolineal para x1,x2,w1,w2:|  
+<br> 
+<br> |Suponiendo que x1, x2 son conocidas, resolvemos la tercera y cuarta ecuación 
+<br> (que son lineales en los w's) mediante la regla de Cramer para w1, w2 obteniendo 
+<br> asi que|  
+<br> 
+<br> |Sustituyendo estas expresiones en la primera y segunda ecuación y resolviendo 
+<br> para x1, x2 obtenemos que|  
+<br> 
+<br> |Asi que nuestra fórmula numérica en el caso n=2 lee como sigue:|  
+<br> 
+<br> |Caso n>2: Al aplicar las condiciones|  
+<br> 
+<br> |se obtiene un sistema nolineal de 2n ecuaciones en 2n desconocidas (las x's 
+<br> y las w's). Este sistema se puede resolver numéricamente usando el método de 
+<br> Newton para sistemas nolineales. Pero en lugar de proceder de esta forma se 
+<br> utiliza el hecho de que se puede demostrar que los xi's son los ceros del n-esimo 
+<br> _polinomio de Legendre_ Ln(x). Estos polinomios se definen por la recursión|  
+<br> 
+<br> |En particular tenemos que L2(x)=(3/2)x2-(1/2) cuyos ceros son ððððð que fueron 
+<br> los x's que determinamos en el caso n=2. También|  
+<br> 
+<br> |de donde podemos obtener los x's para las fórmulas de los casos n=3,4 respectivamente. 
+<br> Teniendo los x's podemos ahora calcular los w's resolviendo un sistema lineal 
+<br> de ecuaciones.|</p>
+A = 1:3;
+B = 4:6;
+    </aside>
+ </article>
+    </section>
+    <aside>
+       <h2>Desarrollo</h2>
+	<h3>Ejercicio 1 PR04</h3>
+        <p>
+		<img src="MLPR04E1.png"><br>
+		<img src="Conv1.gif">
+		
+	</p>
+	<h3>Ejercicio 3 PR04</h3>
+        <p>
+		<img src="MLPR04E3.png"><br>
+		<img src="Conv2.gif">
+		
+	</p>
+    </aside>
+
+    <footer>
+        
+    </footer>
+</body>
+</html>
